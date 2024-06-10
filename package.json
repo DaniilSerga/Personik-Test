@@ -42,6 +42,7 @@
 		]
 	},
 	"devDependencies": {
+		"@tailwindcss/typography": "^0.5.13",
 		"@types/node-sass": "4.11.7",
 		"node-sass": "9.0.0",
 		"prettier": "3.3.1",
