@@ -4,15 +4,15 @@ import {getBotResponse} from 'services/botResponse';
 import {IMessage} from 'types';
 
 const MainPage: FC = () => {
-	const [isUserTurn, setUserTurn] = useState<boolean | null>(null);
-	const [placeholder, setPlaceholder] = useState(
-		'Напишите любой город, например: Где вы живете?',
-	);
+	const [isUserTurn, setUserTurn] = useState(true);
 	const [timer, setTimer] = useState(dayjs().minute(2).second(0));
 	const [timerId, setTimerId] = useState<any>();
 	const [history, setHistory] = useState<IMessage[]>([]);
 	const [userInput, setUserInput] = useState('');
 	const [completness, setCompletness] = useState(0);
+	const [placeholder, setPlaceholder] = useState(
+		'Напишите любой город, например: Где вы живете?',
+	);
 	const listBottomRef = useRef<HTMLDivElement>(null);
 
 	const launchTimer = () => {
@@ -33,9 +33,12 @@ const MainPage: FC = () => {
 		setHistory([...history, {type: 'user', content: userInput!}]);
 		launchTimer();
 		setUserInput('');
+		setPlaceholder('Ожидаем ответа соперника...');
 
 		await getBotResponse(userInput, history).then((res) => {
 			setHistory((prevHistory) => [...prevHistory, res]);
+			setPlaceholder(`Знаете город на букву: "${res.content.at(-1)?.toUpperCase()}?"`);
+			setUserTurn(true);
 		});
 	};
 
@@ -84,7 +87,7 @@ const MainPage: FC = () => {
 							</div>
 						) : (
 							<>
-								<ul className={'flex flex-col gap-[8px] h-full overflow-auto'}>
+								<ul className="flex flex-col gap-[8px] h-full overflow-auto">
 									{history.map((message, index) => (
 										<li
 											key={index}
@@ -96,35 +99,36 @@ const MainPage: FC = () => {
 											<p
 												className={
 													message.type === 'user'
-														? 'text-white'
-														: 'text-gray-700'
+														? 'text-white py-[6px] px-[16px]'
+														: 'text-gray-700 py-[6px] px-[16px]'
 												}>
 												{message.content}
 											</p>
 										</li>
 									))}
+									<div ref={listBottomRef}></div>
 								</ul>
-								<div ref={listBottomRef}></div>
 							</>
 						)}
 					</div>
 					{/* total cities */}
 					{history.length > 0 && (
-						<p className="text-center text-gray-400 text-sm">
+						<p className="text-center text-gray-400 text-sm mt-[20px]">
 							Всего перечислено городов: {history.length}
 						</p>
 					)}
 					{/* send message */}
 					<div className="flex justify-between bg-coolGray-100 p-[8px] mt-[16px] pl-[12px] rounded-[6px]">
 						<input
-							className="w-full placeholder:text-gray-700 bg-transparent focus:outline-none"
+							className="w-full placeholder:text-gray-700 disabled:placeholder:text-gray-400 bg-transparent focus:outline-none"
 							placeholder={placeholder}
+							disabled={!isUserTurn}
 							value={userInput}
 							onChange={(e) => setUserInput(e.target.value)}
 						/>
 						<button
-							className="flex justify-center items-center size-8 bg-violet-500 hover:bg-violet-400 rounded-md transition-colors"
-							disabled={userInput.length === 0}
+							className="cursor-pointer disabled:cursor-default flex justify-center items-center size-8 bg-violet-500 hover:bg-violet-400 disabled:bg-gray-400 rounded-md shadow transition-colors"
+							disabled={userInput.length === 0 || !isUserTurn}
 							onClick={() => submitAnswer()}>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +136,7 @@ const MainPage: FC = () => {
 								viewBox="0 0 24 24"
 								strokeWidth={1.5}
 								stroke="currentColor"
-								className="size-6 cursor-pointer text-white">
+								className="size-6 text-white">
 								<path
 									strokeLinecap="round"
 									strokeLinejoin="round"

@@ -12,11 +12,10 @@ const sleep = (ms: number) => {
 };
 
 export const getBotResponse = async (city: string, history: IMessage[]): Promise<IMessage> => {
-	// if (city.at(0) === '')
 	const lastLetter = city.at(-1)! === 'ь' || city.at(-1)! === 'ъ' ? city.at(-2) : city.at(-1)!;
 
-	// const delay = getRandomDelay();
-	// await sleep(delay);
+	const delay = getRandomDelay();
+	await sleep(delay);
 
 	let result = CITIES.filter((storeCity) => storeCity.name[0].toLowerCase() === lastLetter);
 
