@@ -5,9 +5,9 @@ import {IMessage} from 'types';
 describe('bot responses', () => {
 	test('it gives back the city matching the last letter of input city', async () => {
 		const history: IMessage[] = CITIES.slice(0, 10).map<IMessage>((storedCity) => {
-			return {type: 'user', content: storedCity.name};
+			return {type: 'bot', content: storedCity.name};
 		});
-		const city = 'Анапа';
+		const city = 'Самара';
 		const lastLetter = city.at(-1)!.toUpperCase();
 
 		const {content} = await getBotResponse(city, history);
@@ -17,9 +17,9 @@ describe('bot responses', () => {
 
 	test('It returns city which is not mentioned in history', async () => {
 		const history: IMessage[] = CITIES.slice(0, 10).map<IMessage>((storedCity) => {
-			return {type: 'user', content: storedCity.name};
+			return {type: 'bot', content: storedCity.name};
 		});
-		const city = 'Анапа';
+		const city = 'Самара';
 
 		const {content} = await getBotResponse(city, history);
 

@@ -1,5 +1,6 @@
 import {CITIES} from 'constants/index';
 import {IMessage} from 'types';
+import {getLastLetter} from 'utils/textFormatter';
 
 const getRandomDelay = () => {
 	const min = 10;
@@ -12,7 +13,7 @@ const sleep = (ms: number) => {
 };
 
 export const getBotResponse = async (city: string, history: IMessage[]): Promise<IMessage> => {
-	const lastLetter = city.at(-1)! === 'ь' || city.at(-1)! === 'ъ' ? city.at(-2) : city.at(-1)!;
+	const lastLetter = getLastLetter(city);
 
 	const delay = getRandomDelay();
 	await sleep(delay);
@@ -21,11 +22,10 @@ export const getBotResponse = async (city: string, history: IMessage[]): Promise
 
 	if (history.length > 0) {
 		result = result.filter(
-			(storeCity) => !history.some((historyCity) => storeCity.name === historyCity.content),
+			(storeCity) =>
+				!history.some((historyMessage) => storeCity.name === historyMessage.content),
 		);
 	}
-
-	console.log(result);
 
 	return {type: 'bot', content: result[0].name};
 };

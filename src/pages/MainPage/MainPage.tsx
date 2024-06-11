@@ -1,80 +1,73 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
-import dayjs from 'dayjs';
+import React, {FC, useEffect, useState} from 'react';
 import {getBotResponse} from 'services/botResponse';
 import {IMessage} from 'types';
+import {toast} from 'react-toastify';
+import {Header, MessagesList, ProgressBar} from 'components/MainPage';
+import {getLastLetter} from 'utils/textFormatter';
+import {isCityRepeated} from 'utils/messagesHelper';
+import useTimer from 'hooks/useTimer';
 
 const MainPage: FC = () => {
 	const [isUserTurn, setUserTurn] = useState(true);
-	const [timer, setTimer] = useState(dayjs().minute(2).second(0));
-	const [timerId, setTimerId] = useState<any>();
 	const [history, setHistory] = useState<IMessage[]>([]);
 	const [userInput, setUserInput] = useState('');
-	const [completness, setCompletness] = useState(0);
 	const [placeholder, setPlaceholder] = useState(
 		'Напишите любой город, например: Где вы живете?',
 	);
-	const listBottomRef = useRef<HTMLDivElement>(null);
+	const {timer, launchTimer, timerId} = useTimer();
 
-	const launchTimer = () => {
-		if (history.length !== 0) {
-			setUserTurn(!isUserTurn);
-			clearInterval(timerId);
-			setTimer(dayjs().minute(2).second(0));
+	const updatePlaceholder = (type: 'pending' | 'userTurn', lastLetter?: string) => {
+		switch (type) {
+			case 'pending':
+				setPlaceholder('Ожидаем ответа соперника...');
+				break;
+			case 'userTurn':
+				setPlaceholder(`Знаете город на букву: "${lastLetter}?"`);
+				break;
 		}
-
-		const intervalId = setInterval(() => {
-			setTimer((prevTimer) => prevTimer.subtract(1, 'second'));
-		}, 1000);
-
-		setTimerId(intervalId);
 	};
 
 	const submitAnswer = async () => {
+		if (
+			history.length !== 0 &&
+			userInput[0].toLowerCase() !== getLastLetter(history.at(-1)!.content!)
+		) {
+			toast.error(
+				'Первая буква текущего города должна совпадать с последней буквой предыдущего!',
+			);
+			return;
+		}
+
+		if (isCityRepeated(userInput, history)) {
+			toast.error('Город не должен повторяться!');
+			return;
+		}
+
+		setUserTurn(false);
 		setHistory([...history, {type: 'user', content: userInput!}]);
-		launchTimer();
 		setUserInput('');
-		setPlaceholder('Ожидаем ответа соперника...');
 
 		await getBotResponse(userInput, history).then((res) => {
+			const lastLetter = getLastLetter(res.content)!.toUpperCase();
 			setHistory((prevHistory) => [...prevHistory, res]);
-			setPlaceholder(`Знаете город на букву: "${res.content.at(-1)?.toUpperCase()}?"`);
+			updatePlaceholder('userTurn', lastLetter.toUpperCase());
 			setUserTurn(true);
 		});
 	};
 
 	useEffect(() => {
-		const initialTime = 120;
-		const currentTime = timer.get('minute') * 60 + timer.get('second');
-
-		const res = 100 - (currentTime / initialTime) * 100;
-
-		setCompletness(res);
-	}, [timer]);
-
-	useEffect(() => {
-		if (history.length > 0 && listBottomRef) {
-			listBottomRef.current!.scrollIntoView();
+		if (history.length !== 0) {
+			launchTimer(true);
 		}
-	}, [history]);
+	}, [isUserTurn]);
 
 	return (
-		<div className="grid place-items-center h-screen bg-coolGray-200">
+		<main className="grid place-items-center h-screen bg-coolGray-200">
 			<div className="flex-col justify-center items-center bg-white shadkw max-w-xl w-full rounded-2xl">
 				{/* heading */}
-				<div className="flex justify-between">
-					<p>
-						{isUserTurn || isUserTurn === null
-							? 'Сейчас ваша очередь'
-							: 'Сейчас очередь соперника'}
-					</p>
-					<p>{timer.format('mm:ss')}</p>
-				</div>
+				<Header isUserTurn={isUserTurn} timer={timer} />
 				{/* progress bar */}
-				<div className="h-[10px] bg-gray-100">
-					<div
-						style={{width: `${completness}%`}}
-						className="h-full w-[60%] bg-violet-300 transition-all duration-300"></div>
-				</div>
+				<ProgressBar timer={timer} timerId={timerId!} history={history} />
 				{/* Content */}
 				<div className="pt-[40px] pb-[20px] px-[16px]">
 					{/* messages */}
@@ -86,29 +79,7 @@ const MainPage: FC = () => {
 								</p>
 							</div>
 						) : (
-							<>
-								<ul className="flex flex-col gap-[8px] h-full overflow-auto">
-									{history.map((message, index) => (
-										<li
-											key={index}
-											className={
-												message.type === 'user'
-													? 'self-end bg-violet-500 rounded-tl-[12px] rounded-tr-[12px] rounded-bl-[12px]'
-													: 'self-start bg-violet-50 rounded-tl-[12px] rounded-tr-[12px] rounded-br-[12px]'
-											}>
-											<p
-												className={
-													message.type === 'user'
-														? 'text-white py-[6px] px-[16px]'
-														: 'text-gray-700 py-[6px] px-[16px]'
-												}>
-												{message.content}
-											</p>
-										</li>
-									))}
-									<div ref={listBottomRef}></div>
-								</ul>
-							</>
+							<MessagesList history={history} />
 						)}
 					</div>
 					{/* total cities */}
@@ -147,7 +118,7 @@ const MainPage: FC = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
 	);
 };
 
