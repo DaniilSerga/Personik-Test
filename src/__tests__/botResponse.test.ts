@@ -1,25 +1,40 @@
 import {getBotResponse} from 'services/botResponse';
 import {CITIES} from 'constants/index';
+import {IMessage} from 'types';
 
 describe('bot responses', () => {
 	test('it gives back the city matching the last letter of input city', async () => {
-		const history = CITIES.slice(0, 10);
+		const history: IMessage[] = CITIES.slice(0, 10).map<IMessage>((storedCity) => {
+			return {type: 'user', content: storedCity.name};
+		});
 		const city = 'Анапа';
 		const lastLetter = city.at(-1)!.toUpperCase();
 
-		const {name} = await getBotResponse(city, history);
+		const {content} = await getBotResponse(city, history);
 
-		expect(name.startsWith(lastLetter)).toBe(true);
-	}, 12100);
+		expect(content.startsWith(lastLetter)).toBe(true);
+	}, 13100);
 
 	test('It returns city which is not mentioned in history', async () => {
-		const history = CITIES.slice(0, 10);
+		const history: IMessage[] = CITIES.slice(0, 10).map<IMessage>((storedCity) => {
+			return {type: 'user', content: storedCity.name};
+		});
 		const city = 'Анапа';
 
-		const {name} = await getBotResponse(city, history);
+		const {content} = await getBotResponse(city, history);
 
-		expect(history.some((historyCity) => historyCity.name !== name)).toBe(true);
-	}, 12100);
+		expect(history.some((historyCity) => historyCity.content !== content)).toBe(true);
+	}, 13100);
+
+	test('It returns city with empty history', async () => {
+		const history: IMessage[] = [];
+		const city = 'Анапа';
+		const lastLetter = city.at(-1)!.toUpperCase();
+
+		const {content} = await getBotResponse(city, history);
+
+		expect(content.startsWith(lastLetter)).toBe(true);
+	}, 13100);
 });
 
 export {};
