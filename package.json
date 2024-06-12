@@ -1,6 +1,7 @@
 {
 	"name": "personik-test",
 	"version": "0.1.0",
+	"homepage": "https://daniilserga.github.io/Personik-Test",
 	"private": true,
 	"dependencies": {
 		"@testing-library/jest-dom": "5.17.0",
@@ -10,14 +11,18 @@
 		"@types/node": "16.18.98",
 		"@types/react": "18.3.3",
 		"@types/react-dom": "18.3.0",
+		"dayjs": "1.11.11",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
 		"react-router-dom": "6.23.1",
 		"react-scripts": "5.0.1",
+		"react-toastify": "10.0.5",
 		"typescript": "4.9.5",
 		"web-vitals": "2.1.4"
 	},
 	"scripts": {
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build",
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
@@ -42,10 +47,10 @@
 		]
 	},
 	"devDependencies": {
-		"@types/node-sass": "4.11.7",
-		"node-sass": "9.0.0",
+		"@babel/plugin-proposal-private-property-in-object": "7.21.11",
+		"@tailwindcss/typography": "0.5.13",
+		"gh-pages": "6.1.1",
 		"prettier": "3.3.1",
-		"sass": "1.77.4",
-		"tailwindcss": "^3.4.4"
+		"tailwindcss": "3.4.4"
 	}
 }

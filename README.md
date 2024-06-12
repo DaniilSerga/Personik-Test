@@ -1,46 +1,66 @@
-# Getting Started with Create React App
+# Тестовое задание для frontend-разработчика
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+В данном репозитории содержится веб-приложение (игра) "Города". Суть игры проста: первый игрок называет город, а второй должен назвать другой город, начинающийся с буквы, на которую кончатся город первого игрока
 
-## Available Scripts
+## Технологии и версии
 
-In the project directory, you can run:
+Версии:
+yarn: 1.22.21
+node: 18.18.2
 
-### `npm start`
+Технологии:
+- <a href="https://react.dev/">react</a>
+- <a href="https://www.typescriptlang.org/">TypeScript</a>
+- <a href="https://tailwindcss.com/">tailwind css</a>
+- <a href="https://reactrouter.com/en/main">react-router-dom</a>
+- <a href="https://fkhadra.github.io/react-toastify/introduction/">react-toastify</a>
+- <a href="https://day.js.org/">dayjs</a>
+- <a href="https://prettier.io/">prettier</a>
+- <a href="https://github.com/gitname/react-gh-pages">gh-pages</a>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Реализация
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Проект был поделён на 3 основные страницы:
+1) Онбординг (страница приветствия)
+2) Главная страница
+3) Страница с результатами
 
-### `npm test`
+Для тестирования важных функций приложения была использована библиотека Jest
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Были рассмотрены следующие сценарии:
+- Проигрыш пользователя
+- Проигрыш противника
+- Использование города, не начинающегося с буквы, на которую кончается предыдущий
+- Использование городов, не включённых в список с городами
+- и многое другое
 
-### `npm run build`
+При разработке был соблюден рекомендуемый порядок работы:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [x] Развернуть и настроить проект (не забудь про prettier, gitignore)
+- [x] Сверстать макет из Figma
+- [x] Разбить верстку на компоненты
+- [x] Определить файловую систему
+- [x] Определить формат данных и место для хранения городов
+- [x] Реализовать логику для иммитации ответов
+- [x] Реализовать логику начала игры, ответов пользователя, состояние ожидания ответа
+- [x] Соеденить логику иммитации ответов с логикой ответов пользователя
+- [x] Немного поиграть
+- [x] Реализовать валидацию ввода города по существованию (1) по первой букве (2) и повторения города (3)
+- [x] Поиграть и проверить валидацию
+- [x] Добавить таймер для ответов
+- [x] Добавить рандомную генерацию таймера для логики имитации ответов (10-121 сек)
+- [x] Реализовать сценарий победы
+- [x] Реализовать сценарий поражения
+- [x] Поиграть, поиграть, поиграть
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Деплой
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Для публикации веб-приложения была использована библиотека <a href="https://github.com/gitname/react-gh-pages">gh-pages</a>. Она предоставляет функционал6 позволяющий быстро и без сильных усилий развернуть react приложение на GitHub
 
-### `npm run eject`
+## Скриншоты
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<img width="1680" alt="image" src="https://github.com/DaniilSerga/Personik-Test/assets/87036978/85e8e0a5-210d-4c97-997a-634360570a59">
+<img width="1680" alt="image" src="https://github.com/DaniilSerga/Personik-Test/assets/87036978/72d21e1f-63c8-40db-8651-4b26904d7939">
+<img width="1680" alt="image" src="https://github.com/DaniilSerga/Personik-Test/assets/87036978/43c008e6-f6a1-47c9-b9b8-41525d9e20f0">
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
