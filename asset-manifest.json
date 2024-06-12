@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Personik-Test/static/css/main.c77215d2.css",
+    "main.js": "/Personik-Test/static/js/main.5c46cf16.js",
+    "index.html": "/Personik-Test/index.html",
+    "main.c77215d2.css.map": "/Personik-Test/static/css/main.c77215d2.css.map",
+    "main.5c46cf16.js.map": "/Personik-Test/static/js/main.5c46cf16.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c77215d2.css",
+    "static/js/main.5c46cf16.js"
+  ]
+}
