@@ -5,8 +5,6 @@ import {HistoryContext} from 'context';
 import dayjs from 'dayjs';
 import {ILastMessage} from 'types/LastMessage';
 
-import './App.scss';
-
 const App = () => {
 	const [lastMessage, setLastMessage] = useState<ILastMessage>({
 		message: '',
