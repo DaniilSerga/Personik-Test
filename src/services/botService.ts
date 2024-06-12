@@ -1,7 +1,7 @@
-import {IMessage} from 'types';
 import {getLastLetter} from 'utils/textFormatter';
 import {IBotResponse} from './type';
 import CITIES from 'constants/citiesList';
+import {IMessage} from 'types/Message';
 
 const getRandomDelay = () => {
 	const min = 10;

@@ -1,6 +1,6 @@
-import {CITIES} from 'constants/index';
-import {getBotResponse} from 'services/botService';
-import {IMessage} from 'types';
+import CITIES from 'constants/citiesList';
+import {getBotResponseRequest} from 'services/botService';
+import {IMessage} from 'types/Message';
 
 describe('bot responses', () => {
 	test('it gives back the city matching the last letter of input city', async () => {
@@ -10,7 +10,7 @@ describe('bot responses', () => {
 		const city = 'Самара';
 		const lastLetter = city.at(-1)!.toUpperCase();
 
-		const {content} = await getBotResponse(city, history);
+		const {content} = await getBotResponseRequest(city, history);
 
 		expect(content!.startsWith(lastLetter)).toBe(true);
 	}, 13100);
@@ -21,7 +21,7 @@ describe('bot responses', () => {
 		});
 		const city = 'Самара';
 
-		const {content} = await getBotResponse(city, history);
+		const {content} = await getBotResponseRequest(city, history);
 
 		expect(history.some((historyCity) => historyCity.content !== content)).toBe(true);
 	}, 13100);
@@ -31,7 +31,7 @@ describe('bot responses', () => {
 		const city = 'Анапа';
 		const lastLetter = city.at(-1)!.toUpperCase();
 
-		const {content} = await getBotResponse(city, history);
+		const {content} = await getBotResponseRequest(city, history);
 
 		expect(content!.startsWith(lastLetter)).toBe(true);
 	}, 13100);

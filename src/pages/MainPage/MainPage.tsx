@@ -1,13 +1,13 @@
 import React, {FC, useContext, useEffect, useState} from 'react';
-import {IMessage} from 'types';
 import {toast} from 'react-toastify';
 import {Header, MessagesList, ProgressBar} from 'components/MainPage';
 import {getLastLetter} from 'utils/textFormatter';
-import {isCityExist, isCityRepeated} from 'utils/messagesHelper';
+import {isCityRepeated} from 'utils/messagesHelper';
 import {useNavigate} from 'react-router-dom';
 import {HistoryContext} from 'context';
 import {getBotResponseRequest} from 'services/botService';
-import {useTimer} from 'hooks';
+import {usePlaceholder, useTimer} from 'hooks';
+import {IMessage} from 'types/Message';
 
 const MainPage: FC = () => {
 	const navigate = useNavigate();
@@ -15,21 +15,8 @@ const MainPage: FC = () => {
 	const [isUserTurn, setUserTurn] = useState(true);
 	const [history, setHistory] = useState<IMessage[]>([]);
 	const [userInput, setUserInput] = useState('');
-	const [placeholder, setPlaceholder] = useState(
-		'Напишите любой город, например: Где вы живете?',
-	);
+	const {placeholder, updatePlaceholder} = usePlaceholder();
 	const {timer, launchTimer, resetTimer} = useTimer();
-
-	const updatePlaceholder = (type: 'pending' | 'userTurn', lastLetter?: string) => {
-		switch (type) {
-			case 'pending':
-				setPlaceholder('Ожидаем ответа соперника...');
-				break;
-			case 'userTurn':
-				setPlaceholder(`Знаете город на букву: "${lastLetter}?"`);
-				break;
-		}
-	};
 
 	const endGame = () => {
 		const lastMessage = history.at(-1) === null ? history.at(-2)! : history.at(-1)!;
@@ -39,6 +26,7 @@ const MainPage: FC = () => {
 	};
 
 	const getBotResponse = async () => {
+		updatePlaceholder('pending');
 		await getBotResponseRequest(userInput, history).then((res) => {
 			if (res === null || res.content === null) {
 				endGame();
