@@ -2,18 +2,26 @@ import React, {useState} from 'react';
 import {Route, Routes} from 'react-router-dom';
 import {MainPage, OnboardingPage, ResultPage} from 'pages';
 import {HistoryContext} from 'context';
+import dayjs from 'dayjs';
+import {ILastMessage} from 'types/LastMessage';
 
 import './App.scss';
 
 const App = () => {
-	const [lastMessage, setLastMessage] = useState<{message: string; winner: 'bot' | 'user'}>({
+	const [lastMessage, setLastMessage] = useState<ILastMessage>({
 		message: '',
 		winner: 'bot',
+		time: dayjs(0),
 	});
 	const [historyLength, setHistoryLength] = useState(0);
 
-	const updateLastMessage = (message: string, winner: 'user' | 'bot', historyLength: number) => {
-		setLastMessage({message, winner});
+	const updateLastMessage = (
+		message: string,
+		winner: 'user' | 'bot',
+		historyLength: number,
+		time: dayjs.Dayjs,
+	) => {
+		setLastMessage({message, winner, time});
 		setHistoryLength(historyLength);
 	};
 

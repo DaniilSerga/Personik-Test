@@ -1,20 +1,21 @@
 import dayjs from 'dayjs';
 import {useState} from 'react';
+import {ILaunchTimerProps} from './type';
 
 const useTimer = () => {
-	const [timerId, setTimerId] = useState<NodeJS.Timer>();
 	const [timer, setTimer] = useState(dayjs(0).minute(2).second(0));
+	const [timerId, setTimerId] = useState<NodeJS.Timer>();
 
 	const resetTimer = () => {
 		clearInterval(timerId);
-		setTimer(dayjs().minute(0).second(3));
+		setTimer(dayjs().minute(2).second(0));
 	};
 
 	/**
 	 * Starts a 2 minutes timer
 	 * @param withReset means that timer will be resetted to default value (2 minutes)
 	 */
-	const launchTimer = (withReset: boolean) => {
+	const launchTimer = ({withReset}: ILaunchTimerProps) => {
 		if (withReset) {
 			resetTimer();
 		}

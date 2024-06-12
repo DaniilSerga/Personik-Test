@@ -24,7 +24,7 @@ const ResultPage: FC = () => {
 				</div>
 				<p
 					className={`text-3xl text-center font-medium ${lastMessage.winner === 'bot' ? 'text-red-600' : 'text-green-600'}`}>
-					00:00
+					{lastMessage.time.format('mm:ss')}
 				</p>
 
 				<div className="text-xl text-center">

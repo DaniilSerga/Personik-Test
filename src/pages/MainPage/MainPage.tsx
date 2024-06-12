@@ -1,13 +1,13 @@
 import React, {FC, useContext, useEffect, useState} from 'react';
-import {getBotResponse} from 'services/botResponse';
 import {IMessage} from 'types';
 import {toast} from 'react-toastify';
 import {Header, MessagesList, ProgressBar} from 'components/MainPage';
 import {getLastLetter} from 'utils/textFormatter';
-import {isCityRepeated} from 'utils/messagesHelper';
-import useTimer from 'hooks/useTimer';
+import {isCityExist, isCityRepeated} from 'utils/messagesHelper';
 import {useNavigate} from 'react-router-dom';
 import {HistoryContext} from 'context';
+import {getBotResponseRequest} from 'services/botService';
+import {useTimer} from 'hooks';
 
 const MainPage: FC = () => {
 	const navigate = useNavigate();
@@ -31,6 +31,27 @@ const MainPage: FC = () => {
 		}
 	};
 
+	const endGame = () => {
+		const lastMessage = history.at(-1) === null ? history.at(-2)! : history.at(-1)!;
+		setLastMessage(lastMessage.content, lastMessage.type, history.length, timer);
+		resetTimer();
+		navigate('/result');
+	};
+
+	const getBotResponse = async () => {
+		await getBotResponseRequest(userInput, history).then((res) => {
+			if (res === null || res.content === null) {
+				endGame();
+				return;
+			}
+
+			const lastLetter = getLastLetter(res.content, false);
+			setHistory((prevHistory) => [...prevHistory, res as IMessage]);
+			updatePlaceholder('userTurn', lastLetter.toUpperCase());
+			setUserTurn(true);
+		});
+	};
+
 	const submitAnswer = async () => {
 		if (
 			history.length !== 0 &&
@@ -47,32 +68,26 @@ const MainPage: FC = () => {
 			return;
 		}
 
+		setHistory((prevHistory) => [...prevHistory, {type: 'user', content: userInput}]);
 		setUserTurn(false);
-		setHistory([...history, {type: 'user', content: userInput!}]);
-		setUserInput('');
-
-		await getBotResponse(userInput, history).then((res) => {
-			const lastLetter = getLastLetter(res.content)!.toUpperCase();
-			setHistory((prevHistory) => [...prevHistory, res]);
-			updatePlaceholder('userTurn', lastLetter.toUpperCase());
-			setUserTurn(true);
-		});
 	};
 
 	useEffect(() => {
 		if (timer.get('minute') === 0 && timer.get('second') === 0) {
-			const lastMessage = history.at(-1)!;
-			setLastMessage(lastMessage.content, lastMessage.type, history.length);
-			resetTimer();
-			navigate('/result');
+			endGame();
 		}
 	}, [timer]);
 
 	useEffect(() => {
 		if (history.length !== 0) {
-			launchTimer(true);
+			launchTimer({withReset: true});
 		}
-	}, [isUserTurn]);
+
+		if (!isUserTurn && userInput) {
+			setUserInput('');
+			getBotResponse();
+		}
+	}, [isUserTurn, history]);
 
 	return (
 		<main className="cardWrapper">

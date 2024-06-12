@@ -1,4 +1,4 @@
-import React, {FC, useContext, useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Props} from './type';
 
 const ProgressBar: FC<Props> = ({timer}) => {

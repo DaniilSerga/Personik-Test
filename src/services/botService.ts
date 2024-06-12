@@ -1,6 +1,7 @@
-import {CITIES} from 'constants/index';
 import {IMessage} from 'types';
 import {getLastLetter} from 'utils/textFormatter';
+import {IBotResponse} from './type';
+import CITIES from 'constants/citiesList';
 
 const getRandomDelay = () => {
 	const min = 10;
@@ -12,7 +13,10 @@ const sleep = (ms: number) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
-export const getBotResponse = async (city: string, history: IMessage[]): Promise<IMessage> => {
+export const getBotResponseRequest = async (
+	city: string,
+	history: IMessage[],
+): Promise<IBotResponse> => {
 	const lastLetter = getLastLetter(city);
 
 	const delay = getRandomDelay();
@@ -27,5 +31,7 @@ export const getBotResponse = async (city: string, history: IMessage[]): Promise
 		);
 	}
 
-	return {type: 'bot', content: result[0].name};
+	const response = result.length === 0 ? null : result[0].name;
+
+	return {type: 'bot', content: response};
 };

@@ -1,5 +1,13 @@
+import dayjs from 'dayjs';
+import {ILastMessage} from 'types/LastMessage';
+
 export interface IHistoryContextProps {
-	lastMessage: {message: string; winner: 'user' | 'bot'};
+	lastMessage: ILastMessage;
 	historyLength: number;
-	setLastMessage: (message: string, winner: 'user' | 'bot', historyLength: number) => void;
+	setLastMessage: (
+		message: string,
+		winner: 'user' | 'bot',
+		historyLength: number,
+		time: dayjs.Dayjs,
+	) => void;
 }

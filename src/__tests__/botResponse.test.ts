@@ -1,5 +1,5 @@
-import {getBotResponse} from 'services/botResponse';
 import {CITIES} from 'constants/index';
+import {getBotResponse} from 'services/botService';
 import {IMessage} from 'types';
 
 describe('bot responses', () => {
@@ -12,7 +12,7 @@ describe('bot responses', () => {
 
 		const {content} = await getBotResponse(city, history);
 
-		expect(content.startsWith(lastLetter)).toBe(true);
+		expect(content!.startsWith(lastLetter)).toBe(true);
 	}, 13100);
 
 	test('It returns city which is not mentioned in history', async () => {
@@ -33,7 +33,7 @@ describe('bot responses', () => {
 
 		const {content} = await getBotResponse(city, history);
 
-		expect(content.startsWith(lastLetter)).toBe(true);
+		expect(content!.startsWith(lastLetter)).toBe(true);
 	}, 13100);
 });
 
