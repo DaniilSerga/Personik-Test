@@ -1,20 +1,10 @@
 import React, {FC, useContext, useEffect, useState} from 'react';
 import {Props} from './type';
-import {useNavigate} from 'react-router-dom';
-import {HistoryContext} from 'context';
 
-const ProgressBar: FC<Props> = ({timer, timerId, history}) => {
-	const navigate = useNavigate();
-	const {setLastMessage} = useContext(HistoryContext);
+const ProgressBar: FC<Props> = ({timer}) => {
 	const [completness, setCompletness] = useState(0);
 
 	useEffect(() => {
-		if (timer.get('minute') === 0 && timer.get('second') === 0) {
-			setLastMessage(history.at(-1)!.content);
-			clearInterval(timerId);
-			navigate('/result');
-		}
-
 		const initialTime = 120;
 		const currentTime = timer.get('minute') * 60 + timer.get('second');
 

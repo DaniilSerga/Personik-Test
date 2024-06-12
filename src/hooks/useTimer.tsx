@@ -3,11 +3,11 @@ import {useState} from 'react';
 
 const useTimer = () => {
 	const [timerId, setTimerId] = useState<NodeJS.Timer>();
-	const [timer, setTimer] = useState(dayjs().minute(2).second(0));
+	const [timer, setTimer] = useState(dayjs(0).minute(2).second(0));
 
 	const resetTimer = () => {
 		clearInterval(timerId);
-		setTimer(dayjs().minute(2).second(0));
+		setTimer(dayjs().minute(0).second(3));
 	};
 
 	/**
@@ -26,7 +26,7 @@ const useTimer = () => {
 		);
 	};
 
-	return {timer, timerId, launchTimer};
+	return {timer, timerId, launchTimer, resetTimer};
 };
 
 export default useTimer;

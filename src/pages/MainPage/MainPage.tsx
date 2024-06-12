@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useContext, useEffect, useState} from 'react';
 import {getBotResponse} from 'services/botResponse';
 import {IMessage} from 'types';
 import {toast} from 'react-toastify';
@@ -6,15 +6,19 @@ import {Header, MessagesList, ProgressBar} from 'components/MainPage';
 import {getLastLetter} from 'utils/textFormatter';
 import {isCityRepeated} from 'utils/messagesHelper';
 import useTimer from 'hooks/useTimer';
+import {useNavigate} from 'react-router-dom';
+import {HistoryContext} from 'context';
 
 const MainPage: FC = () => {
+	const navigate = useNavigate();
+	const {setLastMessage} = useContext(HistoryContext);
 	const [isUserTurn, setUserTurn] = useState(true);
 	const [history, setHistory] = useState<IMessage[]>([]);
 	const [userInput, setUserInput] = useState('');
 	const [placeholder, setPlaceholder] = useState(
 		'Напишите любой город, например: Где вы живете?',
 	);
-	const {timer, launchTimer, timerId} = useTimer();
+	const {timer, launchTimer, resetTimer} = useTimer();
 
 	const updatePlaceholder = (type: 'pending' | 'userTurn', lastLetter?: string) => {
 		switch (type) {
@@ -56,18 +60,27 @@ const MainPage: FC = () => {
 	};
 
 	useEffect(() => {
+		if (timer.get('minute') === 0 && timer.get('second') === 0) {
+			const lastMessage = history.at(-1)!;
+			setLastMessage(lastMessage.content, lastMessage.type, history.length);
+			resetTimer();
+			navigate('/result');
+		}
+	}, [timer]);
+
+	useEffect(() => {
 		if (history.length !== 0) {
 			launchTimer(true);
 		}
 	}, [isUserTurn]);
 
 	return (
-		<main className="grid place-items-center h-screen bg-coolGray-200">
-			<div className="flex-col justify-center items-center bg-white shadkw max-w-xl w-full rounded-2xl">
+		<main className="cardWrapper">
+			<div className="card">
 				{/* heading */}
 				<Header isUserTurn={isUserTurn} timer={timer} />
 				{/* progress bar */}
-				<ProgressBar timer={timer} timerId={timerId!} history={history} />
+				<ProgressBar timer={timer} />
 				{/* Content */}
 				<div className="pt-[40px] pb-[20px] px-[16px]">
 					{/* messages */}
