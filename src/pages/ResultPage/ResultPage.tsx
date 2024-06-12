@@ -1,5 +1,5 @@
-import {HistoryContext} from 'context';
 import React, {FC, useContext} from 'react';
+import {HistoryContext} from 'context';
 import {Link} from 'react-router-dom';
 
 const ResultPage: FC = () => {
