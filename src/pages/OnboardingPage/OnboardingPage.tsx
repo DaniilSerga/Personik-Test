@@ -34,7 +34,7 @@ const OnboardingPage: FC = () => {
 							</p>
 						</li>
 					</ul>
-					<Link className="buttonPromary self-center" to="/main-page">
+					<Link className="buttonPrimary self-center" to="/main-page">
 						Начать игру
 					</Link>
 				</div>
