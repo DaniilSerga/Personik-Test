@@ -1,6 +1,11 @@
 import React, {FC, useEffect, useRef} from 'react';
 import {Props} from './type';
 
+/**
+ *
+ * @param history - FUCK YEAH
+ * @returns
+ */
 const MessagesList: FC<Props> = ({history}) => {
 	const listBottomRef = useRef<HTMLDivElement>(null);
 
